@@ -31,3 +31,8 @@
 //-> to get all publications - DONE
 //-> to get specific publication - ASSIGNMENT
 //-> to get a list of publications based on book - ASSIGNMENT
+
+//POST REQUEST
+//-> Add new books
+//-> Add new authors
+//-> Add new publications

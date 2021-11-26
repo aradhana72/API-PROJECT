@@ -1,10 +1,12 @@
 const express = require("express");
-
+var bodyParser = require("body-parser");
 //Database
 const database = require("./database");
 
 //Initialize express
 const booky = express();
+booky.use(bodyParser.urlencoded({extended: true}));
+booky.use(bodyParser.json());
 
 //GET ALL BOOKS
 /*
@@ -111,6 +113,51 @@ Methods         GET
 
 booky.get("/publications", (req,res) => {
   return res.json({publications: database.publication});
+});
+
+//ADD NEW BOOKS
+/*
+Route           /book/new
+Description     add new books
+Access          Public
+Parameter       NONE
+Methods         POST
+*/
+
+booky.post("/book/new", (req,res)=> {
+  const newBook = req.body;
+  database.books.push(newBook);
+  return res.json({updatedBooks: database.books});
+});
+
+//ADD NEW AUTHORS
+/*
+Route           /author/new
+Description     add new authors
+Access          Public
+Parameter       NONE
+Methods         POST
+*/
+
+booky.post("/author/new", (req,res)=> {
+  const newAuthor = req.body;
+  database.author.push(newAuthor);
+  return res.json({updatedAuthors: database.author});
+});
+
+//ADD NEW AUTHORS
+/*
+Route           /publication/new
+Description     add new publications
+Access          Public
+Parameter       NONE
+Methods         POST
+*/
+
+booky.post("/publication/new", (req,res)=> {
+  const newPublication = req.body;
+  database.publication.push(newPublication);
+  return res.json({updatedPublications: database.publication});
 });
 
 booky.listen(3000,() => console.log("Server is up and running!!!"));
