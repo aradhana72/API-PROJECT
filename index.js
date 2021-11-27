@@ -193,6 +193,25 @@ booky.put("/publication/update/book/:isbn", (req,res)=> {
     }
   )
 
-})
+});
+
+//DELETE A BOOK
+/*
+Route           /book/delete
+Description     delete a book
+Access          Public
+Parameter       isbn
+Methods         DELETE
+*/
+
+booky.delete("/book/delete/:isbn", (req,res)=> {
+  const updateBookDatabase = database.books.filter(
+    (book) => book.ISBN !== req.params.isbn
+  )
+
+  database.books = updateBookDatabase;
+
+  return res.json({books: database.books});
+});
 
 booky.listen(3000,() => console.log("Server is up and running!!!"));
