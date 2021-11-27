@@ -214,4 +214,43 @@ booky.delete("/book/delete/:isbn", (req,res)=> {
   return res.json({books: database.books});
 });
 
+//DELETE AN AUTHOR FROM A BOOK AND VICE VERSA
+/*
+Route           /book/delete/author
+Description     delete an author from a book and vice versa
+Access          Public
+Parameter       isbn, authorId
+Methods         DELETE
+*/
+
+booky.delete("/book/delete/author/:isbn/:authorId", (req,res)=> {
+  //Update the book db
+  database.books.forEach((book) => {
+    if(book.ISBN === req.params.isbn) {
+      const newAuthorList = book.author.filter(
+        (eachAuthor) => eachAuthor !== parseInt(req.params.authorId)
+      );
+      book.author = newAuthorList;
+      return;
+    }
+  });
+  //Update author db
+  database.author.forEach((eachAuthor) => {
+    if(eachAuthor.id === parseInt(req.params.authorId)) {
+      const newBookList = eachAuthor.books.filter(
+        (book) => book !== req.params.isbn
+      );
+      eachAuthor.books = newBookList;
+      return;
+    }
+  });
+
+  return res.json({
+    book: database.books,
+    author: database.author,
+    message: "Author and book were deleted!!!"
+  });
+
+});
+
 booky.listen(3000,() => console.log("Server is up and running!!!"));
