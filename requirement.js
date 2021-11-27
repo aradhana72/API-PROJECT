@@ -33,6 +33,11 @@
 //-> to get a list of publications based on book - ASSIGNMENT
 
 //POST REQUEST
-//-> Add new books
-//-> Add new authors
-//-> Add new publications
+//-> Add new books - DONE
+//-> Add new authors - DONE
+//-> Add new publications - DONE
+
+//PUT REQUEST
+
+
+//DELETE REQUEST
