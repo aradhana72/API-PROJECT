@@ -41,12 +41,10 @@ Access          Public
 Parameter       isbn
 Methods         GET
 */
-booky.get("/is/:isbn", (req,res) => {
-  const getSpecificBook = database.books.filter(
-    (book) => book.ISBN === req.params.isbn
-  );
+booky.get("/is/:isbn",async (req,res) => {
+ const getSpecificBook = await BookModel.findOne({ISBN: req.params.isbn});
 
-  if(getSpecificBook.length === 0) {
+  if(!getSpecificBook) {
     return res.json({
       error: `No book found for ISBN of ${req.params.isbn}`
     });
