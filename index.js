@@ -50,7 +50,7 @@ booky.get("/is/:isbn",async (req,res) => {
     });
   }
 
-  return res.json({book: getSpecificBook});
+  return res.json(getSpecificBook);
 
 });
 
@@ -63,12 +63,12 @@ Parameter       category
 Methods         GET
 */
 
-booky.get("/c/:category", (req,res)=> {
-  const getSpecificBook = database.books.filter((book) =>
-book.category.includes(req.params.category)
-);
+booky.get("/c/:category", async (req,res)=> {
 
-if(getSpecificBook.length === 0) {
+const getSpecificBook = await BookModel.findOne({category: req.params.categry});
+//If no specific book is returned the , the findne func returns null, and to execute the not
+//found property we have to make the condn inside if true, !null is true.
+if(!getSpecificBook) {
   return res.json({
     error: `No book found for category of ${req.params.category}`
   });
@@ -86,8 +86,9 @@ Access          Public
 Parameter       NONE
 Methods         GET
 */
-booky.get("/author", (req, res)=> {
-  return res.json({authors: database.author});
+booky.get("/author",async (req, res)=> {
+  const getAllAuthors = AuthorModel.find();
+  return res.json(getAllAuthors);
 });
 
 //GET ALL AUTHORS BASED ON A BOOK
@@ -99,12 +100,10 @@ Parameter       isbn
 Methods         GET
 */
 
-booky.get("/author/book/:isbn", (req,res)=> {
-  const getSpecificAuthor = database.author.filter((author) =>
-author.books.includes(req.params.isbn)
-);
+booky.get("/author/book/:isbn",async (req,res)=> {
+  const getSpecificAuthor = await AuthorModel.findOne({books: req.params.isbn});
 
-if(getSpecificAuthor.length === 0) {
+if(!getSpecificAuthor) {
   return res.json({
     error: `No author found for isbn of ${req.params.isbn}`
   });
@@ -123,7 +122,8 @@ Methods         GET
 */
 
 booky.get("/publications", (req,res) => {
-  return res.json({publications: database.publication});
+  const getAllPublications = PublicationModel.find();
+  return res.json(getAllPublications);
 });
 
 //ADD NEW BOOKS
