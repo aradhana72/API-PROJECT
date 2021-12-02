@@ -258,7 +258,7 @@ Parameter       isbn, authorId
 Methods         DELETE
 */
 
-booky.delete("/book/delete/author/:isbn/:authorId", (req,res)=> {
+booky.delete("/book/delete/author/:isbn/:authorId", async (req,res)=> {
   //Update the book db
   const updatedBook = await BookModel.findOneAndUpdate(
     {
