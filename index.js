@@ -171,6 +171,32 @@ booky.post("/publication/new", (req,res)=> {
   return res.json({updatedPublications: database.publication});
 });
 
+//Update a book title
+/*
+Route           /book/update/:isbn
+Description     update title of the book
+Access          Public
+Parameter       isbn
+Methods         PUT
+*/
+booky.put("/book/update/:isbn", async (req,res)=> {
+  const updatedBook = await BookModel.findOneAndUpdate(
+    {
+      ISBN: req.params.isbn
+    },
+    {
+      title: req.body.bookTitle
+    },
+    {
+      new: true
+    }
+  );
+
+  return res.json({books: database.books});
+});
+
+
+
 //UPADTE PUB AND BOOK
 /*
 Route           /publication/update/book
@@ -215,14 +241,12 @@ Parameter       isbn
 Methods         DELETE
 */
 
-booky.delete("/book/delete/:isbn", (req,res)=> {
-  const updateBookDatabase = database.books.filter(
-    (book) => book.ISBN !== req.params.isbn
-  )
+booky.delete("/book/delete/:isbn", async (req,res)=> {
+  const updateBookDatabase = await BookModel.findOneAndDelete({
+    ISBN: req.params.isbn
+  });
 
-  database.books = updateBookDatabase;
-
-  return res.json({books: database.books});
+  return res.json({books: updateBookDatabase});
 });
 
 //DELETE AN AUTHOR FROM A BOOK AND VICE VERSA
@@ -236,15 +260,19 @@ Methods         DELETE
 
 booky.delete("/book/delete/author/:isbn/:authorId", (req,res)=> {
   //Update the book db
-  database.books.forEach((book) => {
-    if(book.ISBN === req.params.isbn) {
-      const newAuthorList = book.author.filter(
-        (eachAuthor) => eachAuthor !== parseInt(req.params.authorId)
-      );
-      book.author = newAuthorList;
-      return;
-    }
-  });
+  const updatedBook = await BookModel.findOneAndUpdate(
+    {
+      ISBN: req.params.isbn
+    },
+    {
+     $pull: {
+       authors: parseInt(req.params.authorId)
+     }
+   },
+   {
+     new: true
+   }
+ );
   //Update author db
   database.author.forEach((eachAuthor) => {
     if(eachAuthor.id === parseInt(req.params.authorId)) {
